@@ -1,0 +1,65 @@
+/* ProLec Electrical — Color tokens
+   Base palette derived from the fleet decal + invoice branding:
+   safety red, near-black, and warm neutrals. Solar/electrical
+   accent (amber) added for CTAs on the solar+SSEG line of business. */
+
+:root {
+  /* Base — brand */
+  --red-700: #a0141a;
+  --red-600: #c41822;
+  --red-500: #e01e28;   /* primary brand red, matches decal */
+  --red-400: #ea4a52;
+  --red-100: #fbe1e2;
+  --red-50:  #fdf1f1;
+
+  --ink-900: #17181a;   /* near-black used for "ELECTRICAL CONTRACTORS" wordmark */
+  --ink-700: #35373b;
+  --ink-500: #5b5e63;
+  --ink-300: #92969c;
+  --ink-100: #e4e5e7;
+
+  /* Base — neutrals (warm, paper-like — invoices, quotes) */
+  --paper-0:   #ffffff;
+  --paper-50:  #faf9f7;
+  --paper-100: #f2f1ee;
+  --paper-200: #e7e5e0;
+
+  /* Base — accent (amber, for solar/energy call-outs) */
+  --amber-600: #b6740a;
+  --amber-500: #e0940f;
+  --amber-100: #fbead0;
+
+  /* Base — utility */
+  --green-600: #1c7a41;  /* SSEG / compliance "approved" states */
+  --green-100: #e1f2e7;
+
+  /* Semantic aliases */
+  --color-bg-page: var(--paper-50);
+  --color-bg-surface: var(--paper-0);
+  --color-bg-sunken: var(--paper-100);
+  --color-bg-inverse: var(--ink-900);
+
+  --color-text-primary: var(--ink-900);
+  --color-text-secondary: var(--ink-500);
+  --color-text-muted: var(--ink-300);
+  --color-text-on-red: var(--paper-0);
+  --color-text-on-ink: var(--paper-0);
+  --color-text-link: var(--red-600);
+  --color-text-link-hover: var(--red-700);
+
+  --color-brand-primary: var(--red-500);
+  --color-brand-primary-hover: var(--red-600);
+  --color-brand-primary-active: var(--red-700);
+  --color-brand-primary-tint: var(--red-50);
+
+  --color-accent-solar: var(--amber-500);
+  --color-accent-solar-tint: var(--amber-100);
+  --color-accent-approved: var(--green-600);
+  --color-accent-approved-tint: var(--green-100);
+
+  --color-border-default: var(--ink-100);
+  --color-border-strong: var(--ink-300);
+  --color-border-brand: var(--red-500);
+
+  --color-focus-ring: var(--red-500);
+}

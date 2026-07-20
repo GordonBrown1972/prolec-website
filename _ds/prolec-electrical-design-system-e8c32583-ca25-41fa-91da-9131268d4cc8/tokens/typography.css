@@ -1,0 +1,33 @@
+/* ProLec Electrical — Type tokens
+   Source logo uses a bold condensed grotesque ("Arial Nova Cond" per the
+   invoice PDF's embedded fonts) for the PROLEC wordmark, paired with a
+   plain grotesque for body copy. Arial Nova is not a licensable webfont,
+   so it is substituted here with the closest open-match condensed
+   grotesque — see readme.md "Font substitution" note. */
+
+:root {
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;   /* substitute for Arial Nova Cond, Bold */
+  --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;        /* substitute for Arial Nova / Arial */
+  --font-mono: "Roboto Mono", ui-monospace, monospace;               /* invoices/quotes, line-item numerals */
+
+  /* Scale — condensed display sizes run large & tight, per fleet livery + invoice headers */
+  --text-display-xl: 700 64px/0.98 var(--font-display);
+  --text-display-lg: 700 44px/1.02 var(--font-display);
+  --text-display-md: 700 32px/1.05 var(--font-display);
+  --text-display-sm: 700 24px/1.1 var(--font-display);
+
+  --text-heading-lg: 600 22px/1.3 var(--font-body);
+  --text-heading-md: 600 18px/1.35 var(--font-body);
+
+  --text-body-lg: 400 18px/1.55 var(--font-body);
+  --text-body-md: 400 16px/1.55 var(--font-body);
+  --text-body-sm: 400 14px/1.5 var(--font-body);
+
+  --text-label: 600 13px/1.3 var(--font-body);
+  --text-caption: 400 12px/1.4 var(--font-body);
+
+  --text-mono-md: 400 15px/1.5 var(--font-mono);
+
+  --tracking-display: -0.01em;
+  --tracking-label: 0.06em; /* uppercase labels, e.g. "ELECTRICAL CONTRACTORS" */
+}

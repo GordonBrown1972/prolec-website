@@ -1,0 +1,35 @@
+/* ProLec Electrical — Spacing, radius, shadow, motion tokens */
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Radius — the brand is utilitarian/industrial: small, crisp corners, not pill-shaped */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-full: 999px; /* badges/tags only */
+
+  /* Shadow — flat brand; shadows are subtle, used sparingly for card lift only */
+  --shadow-sm: 0 1px 2px rgba(23, 24, 26, 0.06);
+  --shadow-md: 0 4px 12px rgba(23, 24, 26, 0.10);
+  --shadow-lg: 0 12px 32px rgba(23, 24, 26, 0.14);
+
+  --border-width-default: 1px;
+  --border-width-brand: 3px; /* matches the red underline rule beneath the logo wordmark */
+
+  /* Motion — plain, functional. No bounce/spring; short, linear-ish fades */
+  --ease-standard: cubic-bezier(0.3, 0, 0.2, 1); /* @kind other */
+  --duration-fast: 120ms; /* @kind other */
+  --duration-standard: 180ms; /* @kind other */
+}
