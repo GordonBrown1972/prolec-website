@@ -3,7 +3,10 @@ function QuoteForm() {
   const [submitted, setSubmitted] = React.useState(false);
   const [sending, setSending] = React.useState(false);
   const [error, setError] = React.useState(false);
-  const formRef = React.useRef(null);
+  const [name, setName] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [service, setService] = React.useState("Solar + Inverter");
+  const [details, setDetails] = React.useState("");
 
   if (submitted) {
     return (
@@ -28,22 +31,15 @@ function QuoteForm() {
 
   return (
     <form
-      ref={formRef}
       onSubmit={async (e) => {
         e.preventDefault();
         setSending(true);
         setError(false);
-        const data = new FormData(e.target);
         try {
           const res = await fetch("/.netlify/functions/send-quote", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: data.get("name") || "",
-              phone: data.get("phone") || "",
-              service: data.get("service") || "",
-              details: data.get("details") || "",
-            }),
+            body: JSON.stringify({ name, phone, service, details }),
           });
           if (!res.ok) throw new Error("send failed");
           setSubmitted(true);
@@ -62,15 +58,17 @@ function QuoteForm() {
       }}
     >
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 var(--space-5)" }}>
-        <Input name="name" label="Full name" placeholder="Alex Buys" required />
-        <Input name="phone" label="Phone number" placeholder="082 556 8476" type="tel" required />
+        <Input name="name" label="Full name" placeholder="Alex Buys" required value={name} onChange={(e) => setName(e.target.value)} />
+        <Input name="phone" label="Phone number" placeholder="082 556 8476" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} />
       </div>
       <Select
         name="service"
         label="Service needed"
         options={["Solar + Inverter", "New Installation", "Renovation", "Inverter", "Aircon", "Preventative Maintenance", "All-in-one COC"]}
+        value={service}
+        onChange={(e) => setService(e.target.value)}
       />
-      <Textarea name="details" label="Tell us about the job" placeholder="e.g. 5kW inverter + 16 panel install, double-storey roof" rows={4} />
+      <Textarea name="details" label="Tell us about the job" placeholder="e.g. 5kW inverter + 16 panel install, double-storey roof" rows={4} value={details} onChange={(e) => setDetails(e.target.value)} />
       {error && (
         <p style={{ color: "var(--red-500)", font: "var(--text-body-sm)", margin: "0 0 var(--space-4)" }}>
           Something went wrong sending your request — please call us instead.
