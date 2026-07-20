@@ -4,7 +4,6 @@ function QuoteForm() {
   const [sending, setSending] = React.useState(false);
   const [error, setError] = React.useState(false);
   const formRef = React.useRef(null);
-  const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
 
   if (submitted) {
     return (
@@ -36,10 +35,15 @@ function QuoteForm() {
         setError(false);
         const data = new FormData(e.target);
         try {
-          const res = await fetch(FORMSPREE_ENDPOINT, {
+          const res = await fetch("/.netlify/functions/send-quote", {
             method: "POST",
-            body: data,
-            headers: { Accept: "application/json" },
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: data.get("name") || "",
+              phone: data.get("phone") || "",
+              service: data.get("service") || "",
+              details: data.get("details") || "",
+            }),
           });
           if (!res.ok) throw new Error("send failed");
           setSubmitted(true);
