@@ -1,7 +1,10 @@
 function QuoteForm() {
   const { Input, Select, Textarea, Button } = window.ProLecElectricalDesignSystem_e8c325;
   const [submitted, setSubmitted] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [error, setError] = React.useState(false);
   const formRef = React.useRef(null);
+  const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
 
   if (submitted) {
     return (
@@ -18,7 +21,7 @@ function QuoteForm() {
           Thanks — request received
         </h3>
         <p style={{ margin: 0, font: "var(--text-body-md)", color: "var(--color-text-secondary)" }}>
-          Your email app should have opened with the details filled in — send it and we'll call you back within one business day.
+          We've received your request and will call you back within one business day.
         </p>
       </div>
     );
@@ -27,16 +30,24 @@ function QuoteForm() {
   return (
     <form
       ref={formRef}
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
+        setSending(true);
+        setError(false);
         const data = new FormData(e.target);
-        const name = data.get("name") || "";
-        const phone = data.get("phone") || "";
-        const service = data.get("service") || "";
-        const details = data.get("details") || "";
-        const body = `Name: ${name}%0D%0APhone: ${phone}%0D%0AService: ${service}%0D%0A%0D%0A${encodeURIComponent(details)}`;
-        window.location.href = `mailto:admin@prolec.co.za?subject=${encodeURIComponent("Quote request — " + name)}&body=${body}`;
-        setSubmitted(true);
+        try {
+          const res = await fetch(FORMSPREE_ENDPOINT, {
+            method: "POST",
+            body: data,
+            headers: { Accept: "application/json" },
+          });
+          if (!res.ok) throw new Error("send failed");
+          setSubmitted(true);
+        } catch (err) {
+          setError(true);
+        } finally {
+          setSending(false);
+        }
       }}
       style={{
         background: "var(--color-bg-surface)",
@@ -56,8 +67,13 @@ function QuoteForm() {
         options={["Solar + Inverter", "New Installation", "Renovation", "Inverter", "Aircon", "Preventative Maintenance", "All-in-one COC"]}
       />
       <Textarea name="details" label="Tell us about the job" placeholder="e.g. 5kW inverter + 16 panel install, double-storey roof" rows={4} />
-      <Button type="submit" variant="primary">
-        Request a Quote
+      {error && (
+        <p style={{ color: "var(--red-500)", font: "var(--text-body-sm)", margin: "0 0 var(--space-4)" }}>
+          Something went wrong sending your request — please call us instead.
+        </p>
+      )}
+      <Button type="submit" variant="primary" disabled={sending}>
+        {sending ? "Sending…" : "Request a Quote"}
       </Button>
     </form>
   );
