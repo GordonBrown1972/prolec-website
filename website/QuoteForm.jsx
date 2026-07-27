@@ -58,8 +58,8 @@ function QuoteForm() {
       }}
     >
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 var(--space-5)" }}>
-        <Input name="name" label="Full name" placeholder="Alex Buys" required value={name} onChange={(e) => setName(e.target.value)} />
-        <Input name="phone" label="Phone number" placeholder="082 556 8476" type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <Input name="name" label="Full name" required value={name} onChange={(e) => setName(e.target.value)} />
+        <Input name="phone" label="Phone number" required value={phone} onChange={(e) => setPhone(e.target.value)} />
       </div>
       <Select
         name="service"
@@ -68,7 +68,7 @@ function QuoteForm() {
         value={service}
         onChange={(e) => setService(e.target.value)}
       />
-      <Textarea name="details" label="Tell us about the job" placeholder="e.g. 5kW inverter + 16 panel install, double-storey roof" rows={4} value={details} onChange={(e) => setDetails(e.target.value)} />
+      <Textarea name="details" label="Tell us about the job" value={details} onChange={(e) => setDetails(e.target.value)} />
       {error && (
         <p style={{ color: "var(--red-500)", font: "var(--text-body-sm)", margin: "0 0 var(--space-4)" }}>
           Something went wrong sending your request — please call us instead.
