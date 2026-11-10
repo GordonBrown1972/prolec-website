@@ -130,6 +130,12 @@ h3 { font-size: clamp(28px, 3vw, 36px); }
 .screw.tl { top: 10px; left: 10px; } .screw.tr { top: 10px; right: 10px; }
 .board-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-inline: 18px; margin-bottom: 26px; }
 .board-top .mono { color: var(--muted); font-size: 11px; }
+.board-top .right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.auto-btn { appearance: none; display: inline-flex; align-items: center; gap: 8px; background: var(--surface); color: var(--fg); border: 1.5px solid var(--rule); border-radius: 2px; padding: 5px 10px; font: 700 10.5px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.auto-btn:hover { border-color: var(--fg); }
+.auto-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.auto-btn[aria-pressed="true"] .dot { background: var(--red); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
 .warn { display: inline-flex; align-items: center; gap: 8px; background: #f5c400; color: #16171a; font: 700 11px/1 var(--f-mono); letter-spacing: .12em; padding: 6px 10px 6px 8px; border-radius: 2px; }
 .warn svg { width: 14px; height: 14px; }
 
@@ -306,7 +312,7 @@ footer { background: var(--band); color: var(--on-band-2); }
       <i class="screw tl" aria-hidden="true"></i><i class="screw tr" aria-hidden="true"></i>
       <div class="board-top">
         <span class="warn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 1 21h22L12 2Z" fill="#16171a"/><path d="M13 8l-4 6h3l-1 4 4-6h-3l1-4Z" fill="#f5c400"/></svg>ProLec · Services board</span>
-        <span class="mono">230 V ~ 50 Hz · SANS 10142-1</span>
+        <span class="right"><button class="auto-btn" id="auto-btn" type="button" aria-pressed="true"><span class="dot" aria-hidden="true"></span><span id="auto-label">Pause tour</span></button><span class="mono">230 V ~ 50 Hz · SANS 10142-1</span></span>
       </div>
       <div class="rail" id="rail" role="group" aria-label="Services — switch one on to see details">
         <div class="unit main wide" aria-hidden="true">
@@ -505,6 +511,41 @@ footer { background: var(--band); color: var(--on-band-2); }
     var n = (current + (e.key === "ArrowRight" ? 1 : -1) + SERVICES.length) % SERVICES.length;
     setOn(n, true); buttons[n].focus(); e.preventDefault();
   });
+
+  // Auto tour: switch to the next circuit every 3 seconds.
+  // Stops for good once someone picks a breaker; pauses while the pointer or focus is on the board
+  // or the board is off screen; never starts for visitors who ask for reduced motion.
+  var INTERVAL = 3000;
+  var autoBtn = document.getElementById("auto-btn");
+  var autoLabel = document.getElementById("auto-label");
+  var board = rail.parentNode;
+  var autoOn = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var hovering = false, visible = true, timer = null;
+
+  function tick() { setOn((current + 1) % SERVICES.length, false); }
+  function sync() {
+    var run = autoOn && !hovering && visible && !document.hidden;
+    if (run && !timer) timer = setInterval(tick, INTERVAL);
+    if (!run && timer) { clearInterval(timer); timer = null; }
+    // Don't announce every automatic change to screen readers
+    schedule.setAttribute("aria-live", autoOn ? "off" : "polite");
+    autoBtn.setAttribute("aria-pressed", autoOn ? "true" : "false");
+    autoLabel.textContent = autoOn ? "Pause tour" : "Play tour";
+  }
+  function stopAuto() { autoOn = false; sync(); }
+
+  autoBtn.addEventListener("click", function () { autoOn = !autoOn; if (autoOn) tick(); sync(); });
+  buttons.forEach(function (b) { b.addEventListener("click", stopAuto); });
+  rail.addEventListener("keydown", function (e) { if (e.key === "ArrowRight" || e.key === "ArrowLeft") stopAuto(); });
+  board.addEventListener("mouseenter", function () { hovering = true; sync(); });
+  board.addEventListener("mouseleave", function () { hovering = false; sync(); });
+  board.addEventListener("focusin", function (e) { if (e.target !== autoBtn) { hovering = true; sync(); } });
+  board.addEventListener("focusout", function () { hovering = false; sync(); });
+  document.addEventListener("visibilitychange", sync);
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; sync(); }, { threshold: 0.25 }).observe(board);
+  }
+  sync();
 
   var form = document.getElementById("qf");
   var submitBtn = form.querySelector('button[type="submit"]');
