@@ -123,55 +123,116 @@ h3 { font-size: clamp(28px, 3vw, 36px); }
 @media (max-width: 820px) { .sec-head { grid-template-columns: 1fr; } }
 
 /* ---------- The DB board (signature) ---------- */
-.board { background: linear-gradient(180deg, var(--enclosure) 0%, var(--enclosure-2) 100%); border-radius: 8px; padding: 22px clamp(14px, 3vw, 34px) 0; position: relative;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.08), 0 24px 48px -28px rgba(0,0,0,.45); }
-.screw { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f4f3ef, #9b988f); box-shadow: inset 0 0 0 1px rgba(0,0,0,.2); }
-.screw::after { content: ""; position: absolute; left: 2px; right: 2px; top: 5px; height: 2px; background: rgba(0,0,0,.35); transform: rotate(35deg); }
+/* An open distribution board: steel enclosure, copper busbar feeding each breaker from above,
+   live (red) + neutral (black) cables dropping into PVC trunking below. The ON circuit's live cable carries current. */
+.board { --backplate: #34363b; --copper-1: #a85e26; --copper-2: #e7a466; --trunk: #a3a098; --trunk-2: #8c8981;
+  background: linear-gradient(180deg, var(--enclosure) 0%, var(--enclosure-2) 100%); border-radius: 10px; padding: 20px clamp(12px, 2.4vw, 28px) 0; position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 0 rgba(0,0,0,.1), 0 0 0 1px rgba(0,0,0,.08), 0 30px 60px -32px rgba(0,0,0,.55); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .board { --backplate: #18191c; --trunk: #45464b; --trunk-2: #36373b; } }
+:root[data-theme="dark"] .board { --backplate: #18191c; --trunk: #45464b; --trunk-2: #36373b; }
+.screw { position: absolute; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #f4f3ef, #8f8c84); box-shadow: inset 0 0 0 1px rgba(0,0,0,.25), 0 1px 0 rgba(255,255,255,.4); z-index: 2; }
+.screw::after { content: ""; position: absolute; left: 2px; right: 2px; top: 5.5px; height: 2px; background: rgba(0,0,0,.4); transform: rotate(35deg); }
 .screw.tl { top: 10px; left: 10px; } .screw.tr { top: 10px; right: 10px; }
-.board-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-inline: 18px; margin-bottom: 26px; }
+
+.board-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-inline: 18px; margin-bottom: 18px; }
 .board-top .mono { color: var(--muted); font-size: 11px; }
 .board-top .right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.warn { display: inline-flex; align-items: center; gap: 8px; background: #f5c400; color: #16171a; font: 700 11px/1 var(--f-mono); letter-spacing: .12em; padding: 6px 10px 6px 8px; border-radius: 2px; box-shadow: 0 1px 0 rgba(0,0,0,.2); }
+.warn svg { width: 14px; height: 14px; }
 .auto-btn { appearance: none; display: inline-flex; align-items: center; gap: 8px; background: var(--surface); color: var(--fg); border: 1.5px solid var(--rule); border-radius: 2px; padding: 5px 10px; font: 700 10.5px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
 .auto-btn:hover { border-color: var(--fg); }
 .auto-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
 .auto-btn[aria-pressed="true"] .dot { background: var(--red); animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .35; } }
-.warn { display: inline-flex; align-items: center; gap: 8px; background: #f5c400; color: #16171a; font: 700 11px/1 var(--f-mono); letter-spacing: .12em; padding: 6px 10px 6px 8px; border-radius: 2px; }
-.warn svg { width: 14px; height: 14px; }
 
-.rail { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 22px 6px; padding: 0 0 26px; }
-.rail::before { content: ""; position: absolute; left: -6px; right: -6px; top: 86px; height: 34px; background: repeating-linear-gradient(90deg, #a9a69e 0 10px, #bdbab2 10px 20px); border-radius: 2px; z-index: 0; opacity: .7; }
-.unit { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 82px; }
-.unit.wide { width: 120px; }
-.dymo { display: inline-block; background: var(--red); color: #fff; font: 700 10px/1 var(--f-mono); letter-spacing: .08em; padding: 6px 6px 5px; border-radius: 2px; white-space: nowrap;
-  text-shadow: 0 1px 0 rgba(0,0,0,.25); box-shadow: 0 1px 0 rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.25); }
+/* Backplate: the dark perforated mounting plate inside the box */
+.panel { position: relative; border-radius: 6px; background-color: var(--backplate);
+  background-image: radial-gradient(rgba(255,255,255,.06) 1.2px, transparent 1.6px); background-size: 14px 14px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), inset 0 10px 24px rgba(0,0,0,.45); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
+.rail { position: relative; display: flex; justify-content: center; gap: 8px; width: max-content; min-width: 100%; padding: 18px 26px 0; }
+/* Copper busbar across the tops of the breakers */
+.rail::before { content: ""; position: absolute; left: 14px; right: 14px; top: 56px; height: 12px; border-radius: 3px; z-index: 1;
+  background: linear-gradient(180deg, var(--copper-2) 0%, #c97c3d 45%, var(--copper-1) 100%); box-shadow: 0 2px 4px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.45); }
+/* PVC trunking along the bottom */
+.rail::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40px; z-index: 3;
+  background: linear-gradient(180deg, rgba(255,255,255,.25) 0 3px, transparent 3px), repeating-linear-gradient(90deg, var(--trunk) 0 16px, var(--trunk-2) 16px 19px);
+  border-top: 2px solid rgba(0,0,0,.25); box-shadow: 0 -4px 10px rgba(0,0,0,.35); }
+
+.unit { position: relative; display: flex; flex-direction: column; align-items: center; width: 90px; flex: none; }
+.unit.wide { width: 128px; }
+.dymo { position: relative; z-index: 2; display: inline-block; background: var(--red); color: #fff; font: 700 10px/1 var(--f-mono); letter-spacing: .08em; padding: 6px 6px 5px; border-radius: 2px; white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(0,0,0,.25); box-shadow: 0 1px 0 rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.25); transition: transform .2s, box-shadow .2s, background .2s; }
 .unit:nth-child(odd) .dymo { transform: rotate(-1.2deg); } .unit:nth-child(even) .dymo { transform: rotate(.9deg); }
 .dymo.ink { background: #1b1c1f; }
+.unit.on .dymo { background: #ff2b36; box-shadow: 0 0 0 2px rgba(255,255,255,.9), 0 0 18px rgba(255,43,54,.7); transform: rotate(0) scale(1.08); }
+/* Copper tooth from busbar into the breaker's top terminal */
+.feed { width: 10px; height: 26px; margin-top: 17px; background: linear-gradient(90deg, var(--copper-1), var(--copper-2) 50%, var(--copper-1)); border-radius: 2px 2px 0 0; position: relative; z-index: 0; }
 
-.brk { appearance: none; border: 0; padding: 0; background: none; cursor: pointer; display: block; font: inherit; }
-.brk-body, .main-body { position: relative; width: 62px; height: 168px; border-radius: 5px; background: linear-gradient(90deg, var(--breaker-2), var(--breaker) 20%, var(--breaker) 80%, var(--breaker-2));
-  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 2px 0 rgba(0,0,0,.12), 0 8px 14px -8px rgba(0,0,0,.45); display: flex; flex-direction: column; align-items: center; padding-top: 12px; color: var(--breaker-ink); transition: transform .15s; }
-.unit.wide .brk-body { width: 104px; }
-.brk:hover .brk-body { transform: translateY(-2px); }
-.rating { font: 700 13px/1 var(--f-mono); letter-spacing: .04em; }
-.rating small { display: block; font-size: 8.5px; font-weight: 500; letter-spacing: .1em; opacity: .65; margin-top: 3px; text-align: center; }
-.slot { margin-top: 14px; width: 30px; height: 70px; border-radius: 4px; background: linear-gradient(180deg, #2a2b2f, #3d3f44); box-shadow: inset 0 3px 6px rgba(0,0,0,.6); position: relative; }
-.handle { position: absolute; left: 3px; right: 3px; height: 32px; top: 34px; border-radius: 3px; background: linear-gradient(180deg, #4a4c52, #222327); box-shadow: 0 2px 0 rgba(255,255,255,.12) inset, 0 3px 4px rgba(0,0,0,.5);
-  transition: top .18s cubic-bezier(.5,0,.2,1.4), background .18s; }
-.handle::after { content: ""; position: absolute; left: 5px; right: 5px; top: 50%; height: 2px; margin-top: -1px; background: rgba(255,255,255,.18); }
-.win { margin-top: 12px; width: 26px; height: 10px; border-radius: 2px; background: var(--ok); box-shadow: inset 0 1px 2px rgba(0,0,0,.4); transition: background .18s; }
-.state { margin-top: 6px; font: 700 8.5px/1 var(--f-mono); letter-spacing: .14em; color: var(--muted); }
-.brk[aria-pressed="true"] .handle { top: 4px; }
-.brk[aria-pressed="true"] .win { background: var(--red); box-shadow: inset 0 1px 2px rgba(0,0,0,.3), 0 0 10px 1px rgba(224,30,40,.55); }
+.brk { appearance: none; border: 0; padding: 0; background: none; cursor: pointer; display: block; font: inherit; position: relative; z-index: 2; border-radius: 6px; }
+.brk-body, .main-body { position: relative; width: 72px; height: 222px; border-radius: 6px;
+  background: linear-gradient(90deg, var(--breaker-2) 0%, var(--breaker) 18%, #ffffff 50%, var(--breaker) 82%, var(--breaker-2) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), inset 0 -3px 0 rgba(0,0,0,.08), 0 3px 0 rgba(0,0,0,.25), 0 14px 20px -10px rgba(0,0,0,.7);
+  display: flex; flex-direction: column; align-items: center; padding-top: 8px; color: var(--breaker-ink);
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s; }
+.unit.wide .brk-body, .main-body { width: 112px; }
+.term { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #d9d7d0, #7d7a72); box-shadow: inset 0 0 0 1px rgba(0,0,0,.3); position: relative; flex: none; }
+.term::after { content: ""; position: absolute; left: 3px; right: 3px; top: 6px; height: 2px; background: rgba(0,0,0,.45); }
+.term.bot { position: absolute; bottom: 8px; left: 50%; margin-left: -7px; }
+.rating { margin-top: 7px; font: 700 14px/1 var(--f-mono); letter-spacing: .04em; }
+.rating small { display: block; font-size: 8.5px; font-weight: 500; letter-spacing: .1em; opacity: .6; margin-top: 3px; text-align: center; }
+.slot { margin-top: 10px; width: 36px; height: 78px; border-radius: 5px; background: linear-gradient(180deg, #1d1e21, #3a3c41); box-shadow: inset 0 4px 8px rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.7); position: relative; }
+.handle { position: absolute; left: 3px; right: 3px; height: 38px; top: 37px; border-radius: 4px;
+  background: repeating-linear-gradient(180deg, transparent 0 5px, rgba(255,255,255,.07) 5px 7px), linear-gradient(180deg, #55575d, #1f2023);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.18), 0 4px 6px rgba(0,0,0,.6); transition: top .32s cubic-bezier(.34,1.7,.5,1), background .2s; }
+.win { margin-top: 12px; width: 30px; height: 12px; border-radius: 2px; background: var(--ok); box-shadow: inset 0 1px 2px rgba(0,0,0,.45); transition: background .2s, box-shadow .2s; }
+.state { margin-top: 6px; font: 700 9px/1 var(--f-mono); letter-spacing: .16em; color: var(--muted); transition: color .2s; }
+
+/* Hover: the breaker lifts and the lever twitches up as a hint */
+.brk:hover .brk-body { transform: translateY(-4px); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 4px 0 rgba(0,0,0,.25), 0 22px 26px -10px rgba(0,0,0,.75); }
+.brk[aria-pressed="false"]:hover .handle { top: 30px; }
+
+/* ON */
+.brk[aria-pressed="true"] .brk-body { transform: translateY(-6px);
+  box-shadow: 0 0 0 3px var(--red), 0 0 28px 4px rgba(224,30,40,.55), inset 0 1px 0 rgba(255,255,255,.8), 0 24px 28px -10px rgba(0,0,0,.75); }
+.brk[aria-pressed="true"] .handle { top: 3px; background: repeating-linear-gradient(180deg, transparent 0 5px, rgba(255,255,255,.12) 5px 7px), linear-gradient(180deg, #ff3b45, #a8121a); }
+.brk[aria-pressed="true"] .win { background: #ff2b36; box-shadow: inset 0 1px 2px rgba(0,0,0,.3), 0 0 14px 3px rgba(255,43,54,.75); }
 .brk[aria-pressed="true"] .state { color: var(--red); }
-.brk:focus-visible { outline-offset: 5px; }
+.brk:focus-visible { outline-offset: 6px; }
 
-.main-body { width: 104px; }
-.main-body .handle { top: 4px; background: linear-gradient(180deg, #e8323b, #a8121a); }
-.main-body .win { background: var(--red); }
-@media (max-width: 640px) { .unit.main { display: none; } .rail::before { display: none; } .unit { width: 76px; } .rail { gap: 18px 4px; } }
+/* Switch-on moment: body thunks, a spark flashes at the contact */
+.brk.zap .brk-body { animation: thunk .34s cubic-bezier(.3,0,.2,1); }
+@keyframes thunk { 0% { transform: translateY(-6px); } 35% { transform: translateY(1px) scale(.985); } 100% { transform: translateY(-6px); } }
+.spark { position: absolute; left: 50%; top: 2px; width: 0; height: 0; pointer-events: none; z-index: 3; }
+.spark i { position: absolute; left: -1.5px; top: -14px; width: 3px; height: 14px; border-radius: 2px; background: linear-gradient(#fff6c8, #ffb400); opacity: 0; transform-origin: 50% 14px; }
+.spark i:nth-child(1) { transform: rotate(-70deg); } .spark i:nth-child(2) { transform: rotate(-35deg); } .spark i:nth-child(3) { transform: rotate(0deg); }
+.spark i:nth-child(4) { transform: rotate(35deg); } .spark i:nth-child(5) { transform: rotate(70deg); }
+.brk.zap .spark i { animation: spark .42s ease-out; }
+@keyframes spark { 0% { opacity: 1; height: 4px; top: -4px; } 60% { opacity: 1; } 100% { opacity: 0; height: 18px; top: -26px; } }
+.brk.zap .slot::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; background: radial-gradient(circle, rgba(255,230,140,.9), rgba(255,180,0,0) 60%); animation: flash .3s ease-out forwards; pointer-events: none; }
+@keyframes flash { from { opacity: 1; transform: scale(.4); } to { opacity: 0; transform: scale(1.4); } }
 
-.schedule { background: var(--surface); border-radius: 0 0 8px 8px; margin-inline: calc(-1 * clamp(14px, 3vw, 34px)); display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; gap: 18px 36px; align-items: center; padding: 28px clamp(18px, 3vw, 34px); border-top: 3px solid var(--red); }
+/* Outgoing cables: live (red) + neutral (black) down into the trunking */
+.out { display: flex; gap: 8px; height: 94px; margin-top: -4px; position: relative; z-index: 1; }
+.out i { width: 6px; border-radius: 3px; box-shadow: inset -1.5px 0 0 rgba(0,0,0,.3), inset 1.5px 0 0 rgba(255,255,255,.18); }
+.out .live { background: #8e1c22; transition: box-shadow .3s; }
+.out .neu { background: #111214; }
+.unit.on .out .live { background: repeating-linear-gradient(180deg, #ffd0d2 0 6px, #ff3b45 6px 12px, #b4121b 12px 22px); background-size: 6px 22px;
+  box-shadow: 0 0 10px 2px rgba(255,43,54,.6); animation: current .55s linear infinite; }
+@keyframes current { from { background-position: 0 0; } to { background-position: 0 22px; } }
+.unit.main .out .live { background: #b4121b; width: 9px; } .unit.main .out .neu { width: 9px; }
+.unit.main .out::after { content: ""; width: 6px; border-radius: 3px; background: repeating-linear-gradient(180deg, #1d8a4a 0 10px, #f2c200 10px 20px); }
+
+.main-body .handle { top: 3px; background: linear-gradient(180deg, #ff3b45, #a8121a); }
+.main-body .win { background: #ff2b36; }
+
+@media (max-width: 640px) {
+  .panel { scroll-snap-type: x proximity; }
+  .unit { scroll-snap-align: center; }
+  .rail { padding-inline: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .unit.on .out .live { animation: none; background: #ff3b45; } }
+
+.schedule { background: var(--surface); border-radius: 0 0 10px 10px; margin-inline: calc(-1 * clamp(12px, 2.4vw, 28px)); margin-top: 20px; display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; gap: 18px 36px; align-items: center; padding: 28px clamp(18px, 3vw, 34px); border-top: 3px solid var(--red); }
 .schedule .meta { display: grid; gap: 6px; }
 .schedule .meta .mono { color: var(--muted); }
 .schedule .meta .cid { font: 800 44px/0.9 var(--f-display); color: var(--fg); }
@@ -314,11 +375,15 @@ footer { background: var(--band); color: var(--on-band-2); }
         <span class="warn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 1 21h22L12 2Z" fill="#16171a"/><path d="M13 8l-4 6h3l-1 4 4-6h-3l1-4Z" fill="#f5c400"/></svg>ProLec · Services board</span>
         <span class="right"><button class="auto-btn" id="auto-btn" type="button" aria-pressed="true"><span class="dot" aria-hidden="true"></span><span id="auto-label">Pause tour</span></button><span class="mono">230 V ~ 50 Hz · SANS 10142-1</span></span>
       </div>
+      <div class="panel" id="panel">
       <div class="rail" id="rail" role="group" aria-label="Services — switch one on to see details">
         <div class="unit main wide" aria-hidden="true">
           <span class="dymo ink">MAIN</span>
-          <div class="main-body"><span class="rating">63A<small>ISOLATOR</small></span><span class="slot"><span class="handle"></span></span><span class="win"></span><span class="state">ON</span></div>
+          <span class="feed"></span>
+          <div class="main-body"><span class="term"></span><span class="rating">63A<small>ISOLATOR</small></span><span class="slot"><span class="handle"></span></span><span class="win"></span><span class="state">ON</span><span class="term bot"></span></div>
+          <span class="out"><i class="live"></i><i class="neu"></i></span>
         </div>
+      </div>
       </div>
       <div class="schedule" id="schedule" aria-live="polite"></div>
     </div>
@@ -474,13 +539,17 @@ footer { background: var(--band); color: var(--on-band-2); }
     unit.className = "unit" + (s.wide ? " wide" : "");
     unit.innerHTML =
       '<span class="dymo">' + s.label + '</span>' +
+      '<span class="feed"></span>' +
       '<button class="brk" type="button" aria-pressed="false" aria-controls="schedule" aria-label="' + s.title + '">' +
         '<span class="brk-body">' +
+          '<span class="term"></span>' +
           '<span class="rating">' + s.rating + '<small>' + (s.sub || "MCB") + '</small></span>' +
-          '<span class="slot"><span class="handle"></span></span>' +
+          '<span class="slot"><span class="spark"><i></i><i></i><i></i><i></i><i></i></span><span class="handle"></span></span>' +
           '<span class="win"></span><span class="state">OFF</span>' +
+          '<span class="term bot"></span>' +
         '</span>' +
-      '</button>';
+      '</button>' +
+      '<span class="out"><i class="live"></i><i class="neu"></i></span>';
     rail.appendChild(unit);
     var btn = unit.querySelector(".brk");
     btn.addEventListener("click", function () { setOn(i, true); });
@@ -492,8 +561,16 @@ footer { background: var(--band); color: var(--on-band-2); }
     buttons.forEach(function (b, j) {
       var on = j === i;
       b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.parentNode.classList.toggle("on", on);
       b.querySelector(".state").textContent = on ? "ON" : "OFF";
+      if (on && user !== null) { b.classList.remove("zap"); void b.offsetWidth; b.classList.add("zap"); }
     });
+    // On narrow screens the board scrolls sideways: bring the live breaker into view without moving the page
+    var panel = document.getElementById("panel");
+    if (panel && panel.scrollWidth > panel.clientWidth + 4) {
+      var u = buttons[i].parentNode;
+      panel.scrollTo({ left: u.offsetLeft + u.offsetWidth / 2 - panel.clientWidth / 2, behavior: "smooth" });
+    }
     var s = SERVICES[i];
     schedule.innerHTML =
       '<div class="meta schedule-body"><span class="mono">Circuit ' + (i + 1) + ' of ' + SERVICES.length + '</span>' +
@@ -503,7 +580,7 @@ footer { background: var(--band); color: var(--on-band-2); }
       '<a class="btn btn-red schedule-body" href="#quote" id="sched-quote">Quote for ' + s.title.toLowerCase() + '</a>';
     document.getElementById("sched-quote").addEventListener("click", function () { select.value = s.form; });
   }
-  setOn(0, false);
+  setOn(0, null);
 
   // Arrow keys move along the rail, like tabs
   rail.addEventListener("keydown", function (e) {
@@ -518,7 +595,7 @@ footer { background: var(--band); color: var(--on-band-2); }
   var INTERVAL = 3000;
   var autoBtn = document.getElementById("auto-btn");
   var autoLabel = document.getElementById("auto-label");
-  var board = rail.parentNode;
+  var board = document.querySelector(".board");
   var autoOn = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   var hovering = false, visible = true, timer = null;
 
